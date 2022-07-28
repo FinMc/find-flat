@@ -4,6 +4,7 @@
 /node_modules
 /.pnp
 .pnp.js
+/edgedriver_win64
 
 # testing
 /coverage
