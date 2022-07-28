@@ -2,8 +2,14 @@ from selenium import webdriver
 from bs4 import BeautifulSoup
 import pandas as pd
 import time
-driver = webdriver.Edge(
-    "C:\\Users\\Fin\\Desktop\\web_scrapper\\edgedriver_win64\\msedgedriver.exe")
+#driver = webdriver.Edge("C:\\Users\\Fin\\Desktop\\web_scrapper\\edgedriver_win64\\msedgedriver.exe")
+import os
+chrome_options = webdriver.ChromeOptions()
+chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
+chrome_options.add_argument("--headless")
+chrome_options.add_argument("--disable-dev-shm-usage")
+chrome_options.add_argument("--no-sandbox")
+driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
 streets = []
 areas = []
 prices = []
