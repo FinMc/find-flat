@@ -2,12 +2,18 @@
   "name": "scraper",
   "version": "0.1.0",
   "private": true,
+
+  "browser":{
+    "child_process": false
+    },
+    
   "dependencies": {
     "@popperjs/core": "^2.11.5",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.3.0",
     "@testing-library/user-event": "^13.5.0",
     "bootstrap": "^5.2.0",
+    "child_process": "^1.0.2",
     "fs": "0.0.1-security",
     "papaparse": "^5.3.2",
     "react": "^18.2.0",
@@ -17,7 +23,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "python scraper.py && react-scripts start",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
