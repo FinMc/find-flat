@@ -1,10 +1,12 @@
 import "./App.css";
 import Papa from "papaparse";
 import { useEffect, useState } from "react";
+import {data} from "./out"
 
 function App() {
   const [read, setRead] = useState({ data: [] });
   useEffect(() => {
+    document.title = data['0'];
       Papa.parse("./save.csv", {
         header: true,
         delimiter: ",",

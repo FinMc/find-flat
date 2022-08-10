@@ -5,13 +5,6 @@ import pandas as pd
 import time
 while True:
     driver = webdriver.Edge("C:\\Users\\Fin\\Desktop\\web_scrapper\\edgedriver_win64\\msedgedriver.exe")
-    # import os
-    # chrome_options = webdriver.ChromeOptions()
-    # chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
-    # chrome_options.add_argument("--headless")
-    # chrome_options.add_argument("--disable-dev-shm-usage")
-    # chrome_options.add_argument("--no-sandbox")
-    # driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
     streets = []
     areas = []
     prices = []
@@ -104,7 +97,9 @@ while True:
             street = addr.split(',')[0]
             area = ' '.join(addr.split(',')[1:])
             available = a.find(
-                'span', attrs={'data-testid': 'available-from-date'}).text
+                'span', attrs={'data-testid': 'available-from-date'})
+            if available:
+                available = available.text
             price = a.find(
                 'div', attrs={'data-testid': 'listing-price'}).find('p').text
             link = '''https://www.zoopla.co.uk''' + \
@@ -188,11 +183,47 @@ while True:
             links.append(link)
             sent_reqs.append(sent(link))
 
+    def clyde():
+        driver.get('''https://www.clydeproperty.co.uk/search/Glasgow%20City%20Centre:55.857835:-4.256595:Glasgow%20City%20Centre:place:Glasgow%20City%20Centre/any/any/800/0.5/0.5/any/1/any/2/1/date/''')
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight/3);")
+        time.sleep(1)
+        driver.execute_script(
+            "window.scrollTo(3, document.body.scrollHeight/3*2);")
+        time.sleep(1)
+        driver.execute_script("window.scrollTo(3, document.body.scrollHeight);")
+        content = driver.page_source
+        soup = BeautifulSoup(content, features="html.parser")
+        for a in soup.find('div', attrs={'class': 'propertylist'}).findAll('div', attrs={'class': 'property-search-item'}):
+            addr = a.find('div', attrs={'class': 'property-item-info'}).find('label', attrs={'class': 'property-address'}).text
+            street = addr.split(',')[1]
+            area = ' '.join(addr.split(',')[2:]).strip()
+            available =  "Now"
+            price = "£" + a.find('div', attrs={'class': 'property-item-info'}).find('label', attrs={'class': 'property-price'}).text.split("£")[1].strip()
+            isLet = a.find("div", attrs={'class': 'property-image-header'}).find("div", attrs={'class': "text-blur"})
+            if isLet and ('Let' in isLet.text):
+                continue
+            link = '''https://www.clydeproperty.co.uk''' + \
+                a.find("a")['href']
+            imageR = a.find("div", attrs={'class': 'background-search-template'})["style"].split("'")[1]
+            if imageR:
+                image = imageR
+            else:
+                image = None
+            streets.append(street)
+            areas.append(area)
+            availables.append(available)
+            prices.append(price)
+            images.append(image)
+            links.append(link)
+            sent_reqs.append(sent(link))
+
+
     djAlex()
     rightMove()
     zoopla()
     onTheMarket()
     openRent()
+    clyde()
     times = [time.strftime("%H:%M %Y/%m/%d")] * len(availables)
     df = pd.DataFrame({"Req": sent_reqs, "Street": streets, "Area": areas, "Price": prices, "Available": availables, "Link": links, "Added":  times, "Image": images})
     n_df = []
@@ -215,5 +246,7 @@ while True:
         fo.write(n_df.to_html(render_links=True, escape=False))
     n_df.to_csv("public/save.csv")
     driver.close()
-    driver.quit()
+    with open("src/out.js",'w') as fo:
+        fo.write("export const data = { 0: \"" + datetime.now().strftime("%d/%m/%Y %H:%M:%S") + "\" }")
     time.sleep(600)
+    
