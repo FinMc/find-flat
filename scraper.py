@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 import pandas as pd
 import discord
 import time
-TOKEN = "NTEyMjg1MTgwMjc1MzI2OTk3.G_65uQ.W09UoJdvhI1AvrDwZw7J2fkUFuixxeFTFmD874"
+TOKEN = input("ENTER TOKEN:")
 
 driver = webdriver.Edge("C:\\Users\\FinMac\\Desktop\\find-flat\\edgedriver_win64\\msedgedriver.exe")
 streets = []
