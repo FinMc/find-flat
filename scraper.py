@@ -218,7 +218,6 @@ while True:
             sent_reqs.append(sent(link))
 
 
-    djAlex()
     rightMove()
     zoopla()
     onTheMarket()
